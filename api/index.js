@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const { dot } = require("node:test/reporters");
+const userRoutes = require("./routes/user.route");
+const authRoutes = require("./routes/auth.route");
 
 dotenv.config();
 
@@ -9,6 +11,21 @@ const app = express();
 
 const uri = process.env.MONGODB_URI;
 
+app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
+});
+
+//DB and Server initiated
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
 };
@@ -22,7 +39,7 @@ async function run() {
     );
   } finally {
     // Ensures that the client will close when you finish/error
-    await mongoose.disconnect();
+    console.log("connected");
   }
 }
 run().catch(console.dir);
