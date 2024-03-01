@@ -3,12 +3,15 @@ import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signIn } from "../api/userApi";
+import { useDispatch } from "react-redux";
+import { signInDetails } from "../redux/userSlice";
 
 function SignIn() {
   const [formData, setFormData] = useState({});
   const [validationError, setValidationError] = useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -24,9 +27,10 @@ function SignIn() {
     mutate(formData);
   }
 
-  const { mutate, isError, isPending, error, data } = useMutation({
+  const { mutate, isError, isPending, error } = useMutation({
     mutationFn: ({ email, password }) => signIn(email, password),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      dispatch(signInDetails(data));
       navigate("/");
     },
     onError: () => {
