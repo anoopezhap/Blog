@@ -19,3 +19,12 @@ export async function signIn(email, password) {
 
   return res;
 }
+
+export async function googleAuth(email, username, googlePhotoUrl) {
+  const body = { email: email, name: username, googlePhotoUrl };
+  const res = await axios.post("/api/auth/google", body, {
+    withCredentials: true,
+  });
+
+  return res;
+}

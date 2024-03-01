@@ -74,4 +74,63 @@ const signin = async (req, res, next) => {
   }
 };
 
-module.exports = { signup, signin };
+const google = async (req, res, next) => {
+  const { email, name, googlePhotoUrl } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      const accessToken = jwt.sign(
+        {
+          id: user._id,
+        },
+        process.env.ACESS_TOKEN_SECRET
+      );
+
+      const { password, ...rest } = user._doc;
+
+      res
+        .status(200)
+        .cookie("acess_token", accessToken, {
+          httpOnly: true, //accessible only by web server
+          secure: true, //https
+          sameSite: "None", //cross-site cookie
+        })
+        .json(rest);
+    } else {
+      const generatedPassword = Math.random().toString(36).slice(-8);
+      const hashedPasssword = bcryptjs.hashSync(generatedPassword, 10);
+
+      const newUser = new User({
+        username:
+          name.toLowerCase().split(" ").join("") +
+          Math.random().toString(9).slice(-4),
+        email,
+        password: hashedPasssword,
+        profilePicture: googlePhotoUrl,
+      });
+
+      await newUser.save();
+      const accessToken = jwt.sign(
+        {
+          id: newUser._id,
+        },
+        process.env.ACESS_TOKEN_SECRET
+      );
+      const { password, ...rest } = newUser._doc;
+
+      res
+        .status(200)
+        .cookie("acess_token", accessToken, {
+          httpOnly: true, //accessible only by web server
+          secure: true, //https
+          sameSite: "None", //cross-site cookie
+        })
+        .json(rest);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { signup, signin, google };
