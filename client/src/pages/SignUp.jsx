@@ -1,9 +1,15 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { createUser } from "../api/userApi";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
   const [formData, setFormData] = useState({});
+  const [validationError, setValidationError] = useState(null);
+
+  const navigate = useNavigate();
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -11,8 +17,25 @@ function SignUp() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log("details", formData);
+
+    if (!formData.username || !formData.email || !formData.password) {
+      return setValidationError("All fields are mandatory");
+    }
+    mutate(formData);
   }
+
+  const { mutate, isError, isSuccess, isPending, error, data } = useMutation({
+    mutationFn: ({ username, email, password }) =>
+      createUser(username, email, password),
+    onSuccess: () => {
+      navigate("/sign-in");
+    },
+    onError: () => {
+      setValidationError(null);
+    },
+  });
+
+  const errorMessage = validationError || error?.response?.data?.message;
 
   return (
     <div className="min-h-screen mt-20">
@@ -60,8 +83,19 @@ function SignUp() {
                 onChange={handleChange}
               />
             </div>
-            <Button gradientDuoTone="purpleToPink" type="submit">
-              Sign Up
+            <Button
+              gradientDuoTone="purpleToPink"
+              type="submit"
+              disabled={isPending}
+            >
+              {isPending ? (
+                <>
+                  <Spinner size="sm" />
+                  <span className="pl-3">Loading....</span>
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </form>
           <div className="flex gap-2 text-sm mt-5">
@@ -70,6 +104,13 @@ function SignUp() {
               Sign In
             </Link>
           </div>
+          {validationError || isError ? (
+            <Alert className="mt-5" color="failure">
+              {errorMessage}
+            </Alert>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

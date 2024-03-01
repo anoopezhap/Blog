@@ -1,6 +1,7 @@
 const bcryptjs = require("bcryptjs");
 const User = require("./../models/user.model");
 const errorHandler = require("../utils/error");
+const jwt = require("jsonwebtoken");
 
 const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -23,13 +24,54 @@ const signup = async (req, res, next) => {
 
   try {
     await newUser.save();
-    res.json({ message: "Signup successfull" });
+    return res.json({ message: "Signup successfull" });
   } catch (err) {
     next(err);
   }
-
-  await newUser.save();
-  res.json({ message: "Signup successfull" });
 };
 
-module.exports = { signup };
+const signin = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password || email === "" || password === "") {
+    return next(errorHandler(400, "All fields are required"));
+  }
+
+  try {
+    const validUser = await User.findOne({ email });
+    //check if use exists
+    if (!validUser) {
+      return next(errorHandler(404, "user not found"));
+    }
+
+    //check if entered password is valid
+    const validPassword = bcryptjs.compareSync(password, validUser.password);
+    if (!validPassword) {
+      return next(errorHandler(400, "Invalid username or password"));
+    }
+
+    //if everything good, assign token
+
+    const accessToken = jwt.sign(
+      {
+        id: validUser._id,
+      },
+      process.env.ACESS_TOKEN_SECRET
+    );
+
+    const { password: pass, ...rest } = validUser._doc;
+
+    res
+      .status(200)
+      .cookie("acess_token", accessToken, {
+        httpOnly: true, //accessible only by web server
+        secure: true, //https
+        sameSite: "None", //cross-site cookie
+      })
+      .json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { signup, signin };

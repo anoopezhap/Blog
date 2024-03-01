@@ -4,6 +4,9 @@ const dotenv = require("dotenv");
 const { dot } = require("node:test/reporters");
 const userRoutes = require("./routes/user.route");
 const authRoutes = require("./routes/auth.route");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const corsOptions = require("./config/corsOptions");
 
 dotenv.config();
 
@@ -11,7 +14,9 @@ const app = express();
 
 const uri = process.env.MONGODB_URI;
 
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 
