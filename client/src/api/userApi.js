@@ -28,3 +28,13 @@ export async function googleAuth(email, username, googlePhotoUrl) {
 
   return res;
 }
+
+export async function updateUser(userId, username, password, profilePicture) {
+  const body = { username, password, profilePicture, userId };
+
+  const res = await axios.put(`/api/user/update/${userId}`, body, {
+    withCredentials: true,
+  });
+
+  return res;
+}

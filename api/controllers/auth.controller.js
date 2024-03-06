@@ -63,7 +63,7 @@ const signin = async (req, res, next) => {
 
     res
       .status(200)
-      .cookie("acess_token", accessToken, {
+      .cookie("access_token", accessToken, {
         httpOnly: true, //accessible only by web server
         secure: true, //https
         sameSite: "None", //cross-site cookie
