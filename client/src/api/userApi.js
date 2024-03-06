@@ -38,3 +38,11 @@ export async function updateUser(userId, username, password, profilePicture) {
 
   return res;
 }
+
+export async function deleteUser(userId) {
+  //console.log("userId", userId);
+  const res = await axios.delete(`/api/user/delete/${userId}`, {
+    withCredentials: true,
+  });
+  return res;
+}

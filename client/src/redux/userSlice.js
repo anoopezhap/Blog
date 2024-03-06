@@ -10,9 +10,12 @@ const userSlice = createSlice({
     signInDetails(state, action) {
       state.currentUser = action.payload.data;
     },
+    deleteUserDetails(state) {
+      state.currentUser = null;
+    },
   },
 });
 
-export const { signInDetails } = userSlice.actions;
+export const { signInDetails, deleteUserDetails } = userSlice.actions;
 
 export default userSlice.reducer;
