@@ -55,8 +55,9 @@ const signin = async (req, res, next) => {
     const accessToken = jwt.sign(
       {
         id: validUser._id,
+        isAdmin: validUser.isAdmin,
       },
-      process.env.ACESS_TOKEN_SECRET
+      process.env.ACCESS_TOKEN_SECRET
     );
 
     const { password: pass, ...rest } = validUser._doc;
@@ -83,15 +84,16 @@ const google = async (req, res, next) => {
       const accessToken = jwt.sign(
         {
           id: user._id,
+          isAdmin: user.isAdmin,
         },
-        process.env.ACESS_TOKEN_SECRET
+        process.env.ACCESS_TOKEN_SECRET
       );
 
       const { password, ...rest } = user._doc;
 
       res
         .status(200)
-        .cookie("acess_token", accessToken, {
+        .cookie("access_token", accessToken, {
           httpOnly: true, //accessible only by web server
           secure: true, //https
           sameSite: "None", //cross-site cookie
@@ -114,14 +116,15 @@ const google = async (req, res, next) => {
       const accessToken = jwt.sign(
         {
           id: newUser._id,
+          isAdmin: newUser.isAdmin,
         },
-        process.env.ACESS_TOKEN_SECRET
+        process.env.ACCESS_TOKEN_SECRET
       );
       const { password, ...rest } = newUser._doc;
 
       res
         .status(200)
-        .cookie("acess_token", accessToken, {
+        .cookie("access_token", accessToken, {
           httpOnly: true, //accessible only by web server
           secure: true, //https
           sameSite: "None", //cross-site cookie

@@ -68,4 +68,19 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-module.exports = { updateUser, deleteUser };
+const signout = async (req, res, next) => {
+  try {
+    res
+      .clearCookie("access_token", {
+        httpOnly: true, //accessible only by web server
+        secure: true, //https
+        sameSite: "None", //cross-site cookie
+      })
+      .status(200)
+      .json({ message: "user have been signed out" });
+  } catch (error) {
+    next(errorHandler(error));
+  }
+};
+
+module.exports = { updateUser, deleteUser, signout };

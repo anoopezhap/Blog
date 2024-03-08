@@ -1,10 +1,33 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+import { signoutUser } from "../api/userApi";
+import { deleteUserDetails } from "../redux/userSlice";
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const {
+    mutate: signoutMutate,
+    isError: signoutIserror,
+    isPending: signoutIsPending,
+    error: signoutError,
+  } = useMutation({
+    mutationFn: () => signoutUser(),
+    onSuccess: () => {
+      dispatch(deleteUserDetails());
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
+  });
+
+  function handleSignout() {
+    signoutMutate();
+  }
 
   const path = useLocation().pathname;
   return (
@@ -47,7 +70,7 @@ function Header() {
             <Link to={"/dashboard?tab=profile"}>
               <Dropdown.Item>Profile</Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item>Sign Out</Dropdown.Item>
+              <Dropdown.Item onClick={handleSignout}>Sign Out</Dropdown.Item>
             </Link>
           </Dropdown>
         ) : (

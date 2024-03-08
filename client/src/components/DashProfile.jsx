@@ -11,9 +11,10 @@ import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useMutation } from "@tanstack/react-query";
-import { deleteUser, updateUser } from "../api/userApi";
+import { deleteUser, signoutUser, updateUser } from "../api/userApi";
 import { signInDetails, deleteUserDetails } from "../redux/userSlice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 function DashProfile() {
   const { currentUser } = useSelector((state) => state.user);
@@ -27,6 +28,9 @@ function DashProfile() {
   const [formData, setFormData] = useState({});
   const [imageFileUploading, setImageFileUploading] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
+
+  // console.log("image fill url", imageFileUrl);
+  // console.log("current user", currentUser.profilePicture);
 
   const { mutate, isError, isPending, error, isSuccess } = useMutation({
     mutationFn: ({ userId, username, password, profilePicture }) =>
@@ -56,6 +60,21 @@ function DashProfile() {
     },
   });
 
+  const {
+    mutate: signoutMutate,
+    isError: signoutIserror,
+    isPending: signoutIsPending,
+    error: signoutError,
+  } = useMutation({
+    mutationFn: () => signoutUser(),
+    onSuccess: () => {
+      dispatch(deleteUserDetails());
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
+  });
+
   const filePickerRef = useRef();
 
   function handleImageChange(e) {
@@ -64,6 +83,10 @@ function DashProfile() {
       setImagefile(file);
       setImagefileUrl(URL.createObjectURL(file));
     }
+  }
+
+  function handleSignout() {
+    signoutMutate();
   }
 
   function handleChange(e) {
@@ -207,6 +230,17 @@ function DashProfile() {
         >
           Update
         </Button>
+        {currentUser.isAdmin && (
+          <Link to="/create-post">
+            <Button
+              type="button"
+              gradientDuoTone="purpleToPink"
+              className="w-full"
+            >
+              Create a Post
+            </Button>
+          </Link>
+        )}
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span
@@ -215,7 +249,9 @@ function DashProfile() {
         >
           Delete Account
         </span>
-        <span className="cursor-pointer">Signout</span>
+        <span className="cursor-pointer" onClick={handleSignout}>
+          Signout
+        </span>
       </div>
       {isSuccess && (
         <Alert color="success" className="mt-3">

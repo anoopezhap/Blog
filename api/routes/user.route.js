@@ -11,5 +11,6 @@ router.get("/test", (req, res) => {
 
 router.put("/update/:userId", verifyToken, userController.updateUser);
 router.delete("/delete/:userId", verifyToken, userController.deleteUser);
+router.post("/signout", userController.signout);
 
 module.exports = router;

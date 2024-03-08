@@ -10,7 +10,7 @@ const verifyToken = (req, res, next) => {
     return next(errorHandler(401, "Unauthorized"));
   }
 
-  jwt.verify(token, process.env.ACESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) {
       return next(errorHandler(401, "unauthorized"));
     }

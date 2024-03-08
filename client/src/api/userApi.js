@@ -46,3 +46,8 @@ export async function deleteUser(userId) {
   });
   return res;
 }
+
+export async function signoutUser() {
+  const res = await axios.post("/api/user/signout", { withCredentials: true });
+  return res;
+}

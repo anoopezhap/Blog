@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const { dot } = require("node:test/reporters");
 const userRoutes = require("./routes/user.route");
 const authRoutes = require("./routes/auth.route");
+const postRoutes = require("./routes/post.route");
+
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const corsOptions = require("./config/corsOptions");
@@ -20,6 +22,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/post", postRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
