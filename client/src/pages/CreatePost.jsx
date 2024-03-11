@@ -11,6 +11,9 @@ import "react-quill/dist/quill.snow.css";
 import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { useMutation } from "@tanstack/react-query";
+import { createPost } from "../api/postApi";
+import { useNavigate } from "react-router-dom";
 
 function CreatePost() {
   const [file, setFile] = useState(null);
@@ -18,10 +21,22 @@ function CreatePost() {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
 
+  const navigate = useNavigate();
+
   function handleFormSubmit(e) {
     e.preventDefault();
-    console.log(formData);
+    mutate(formData);
   }
+
+  const { mutate, isError, isPending, error } = useMutation({
+    mutationFn: (formData) => createPost(formData),
+    onSuccess: (data) => {
+      navigate(`/post/${data.data.savedPost.slug}`);
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
+  });
 
   async function handleUploadImage() {
     try {
@@ -137,6 +152,11 @@ function CreatePost() {
         >
           Publish
         </Button>
+        {isError && (
+          <Alert color="failure" className="mt-5">
+            {error?.response?.data?.message}
+          </Alert>
+        )}
       </form>
     </div>
   );
