@@ -11,7 +11,11 @@ import "react-quill/dist/quill.snow.css";
 import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { createPost } from "../api/postApi";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +26,7 @@ function CreatePost() {
   const [formData, setFormData] = useState({});
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   function handleFormSubmit(e) {
     e.preventDefault();
@@ -32,6 +37,7 @@ function CreatePost() {
     mutationFn: (formData) => createPost(formData),
     onSuccess: (data) => {
       navigate(`/post/${data.data.savedPost.slug}`);
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (error) => {
       console.log("error", error);
