@@ -1,14 +1,43 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import { getAllPostsByUser } from "../api/postApi";
-import { Table } from "flowbite-react";
+import { deletePost, getAllPostsByUser } from "../api/postApi";
+import { Table, Modal, Button } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { useQueryClient } from "@tanstack/react-query";
 
 function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
 
   //const [showMore, setShowMore] = useState(true);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState(null);
+
+  const queryClient = useQueryClient();
+
+  function handleDeletePost() {
+    const body = { userId: currentUser._id, postId: postIdToDelete };
+    deleteMutate(body);
+  }
+
+  const {
+    isPending: deleteIsPending,
+    isError: deleteIsError,
+    isSuccess: deleteIsSuccess,
+    data: deleteData,
+    error: deleteError,
+    mutate: deleteMutate,
+  } = useMutation({
+    mutationFn: (body) => deletePost(body),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      setShowDeletePopup(false);
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
+  });
 
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
@@ -70,7 +99,13 @@ function DashPosts() {
                     </Table.Cell>
                     <Table.Cell>{post.category}</Table.Cell>
                     <Table.Cell>
-                      <span className="font-medium text-red-500 hover:underline cursor-pointer">
+                      <span
+                        onClick={() => {
+                          setShowDeletePopup(true);
+                          setPostIdToDelete(post._id);
+                        }}
+                        className="font-medium text-red-500 hover:underline cursor-pointer"
+                      >
                         Delete
                       </span>
                     </Table.Cell>
@@ -104,6 +139,31 @@ function DashPosts() {
       ) : (
         <p> You have no posts yet</p>
       )}
+      <Modal
+        show={showDeletePopup}
+        onClose={() => setShowDeletePopup(false)}
+        popup
+        size="md"
+      >
+        {" "}
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete this post?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeletePost}>
+                Yes, I'm sure
+              </Button>
+              <Button color="gray" onClick={() => setShowDeletePopup(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

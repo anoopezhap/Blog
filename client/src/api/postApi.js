@@ -18,3 +18,13 @@ export async function getAllPostsByUser(currentUserId, props) {
   );
   return res.data.posts;
 }
+
+export async function deletePost(body) {
+  const { postId, userId } = body;
+
+  const res = await axios.delete(`/api/post/deletepost/${postId}/${userId}`, {
+    withCredentials: true,
+  });
+
+  return res;
+}

@@ -6,5 +6,10 @@ const router = express.Router();
 
 router.post("/create", verifyToken, postController.create);
 router.get("/getPosts", postController.getPosts);
+router.delete(
+  "/deletepost/:postId/:userId",
+  verifyToken,
+  postController.deletepost
+);
 
 module.exports = router;
