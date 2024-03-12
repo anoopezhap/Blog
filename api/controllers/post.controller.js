@@ -37,7 +37,7 @@ const getPosts = async (req, res, next) => {
       ...(req.query.userId && { userId: req.query.userId }),
       ...(req.query.category && { category: req.query.category }),
       ...(req.query.slug && { slug: req.query.slug }),
-      ...(req.query.postId && { _id: re.query.postId }),
+      ...(req.query.postId && { _id: req.query.postId }),
       ...(req.query.searcTerm && {
         $or: [
           { title: { $regex: req.query.searcTerm, $options: "i" } },
@@ -69,6 +69,7 @@ const getPosts = async (req, res, next) => {
       lastMonthPosts,
     });
   } catch (error) {
+    //console.log(error);
     next(error);
   }
 };

@@ -19,6 +19,11 @@ export async function getAllPostsByUser(currentUserId, props) {
   return res.data.posts;
 }
 
+export async function getPostById(postId) {
+  const res = await axios.get(`/api/post/getPosts?postId=${postId}`);
+  return res.data.posts;
+}
+
 export async function deletePost(body) {
   const { postId, userId } = body;
 
