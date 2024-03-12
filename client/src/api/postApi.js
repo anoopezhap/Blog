@@ -12,7 +12,9 @@ export async function createPost(formData) {
   return res;
 }
 
-export async function getAllPostsByUser(currentUserId) {
-  const res = await axios.get(`/api/post/getPosts?userId=${currentUserId}`);
-  return res;
+export async function getAllPostsByUser(currentUserId, props) {
+  const res = await axios.get(
+    `/api/post/getPosts?userId=${currentUserId}&startIndex=${props.pageParam}`
+  );
+  return res.data.posts;
 }
