@@ -39,9 +39,9 @@ export async function updateUser(userId, username, password, profilePicture) {
   return res;
 }
 
-export async function deleteUser(userId) {
-  //console.log("userId", userId);
-  const res = await axios.delete(`/api/user/delete/${userId}`, {
+export async function deleteUser(userIdToDelete) {
+  //console.log("userId", userIdToDelete);
+  const res = await axios.delete(`/api/user/delete/${userIdToDelete}`, {
     withCredentials: true,
   });
   return res;
@@ -50,4 +50,13 @@ export async function deleteUser(userId) {
 export async function signoutUser() {
   const res = await axios.post("/api/user/signout", { withCredentials: true });
   return res;
+}
+
+export async function getUsers(props) {
+  const res = await axios.get(
+    `api/user/getusers?startIndex=${props.pageParam}`,
+    { withCredentials: true }
+  );
+
+  return res.data.users;
 }

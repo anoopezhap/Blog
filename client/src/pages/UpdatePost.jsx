@@ -16,11 +16,14 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { createPost } from "../api/postApi";
+import { createPost, updatePost } from "../api/postApi";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function CreatePost({ postData }) {
   //console.log("data", postData);
+
+  const { currentUser } = useSelector((state) => state.user);
 
   const [file, setFile] = useState(null);
   const [imageUploadProgess, setImageUploadProgess] = useState(null);
@@ -33,14 +36,19 @@ function CreatePost({ postData }) {
   function handleFormSubmit(e) {
     e.preventDefault();
 
-    console.log(formData);
-    //mutate(formData);
+    const loggedInUserId = currentUser._id;
+
+    const updatePostData = { ...formData, loggedInUserId };
+
+    //console.log(updatePostData);
+
+    mutate(updatePostData);
   }
 
   const { mutate, isError, isPending, error } = useMutation({
-    mutationFn: (formData) => createPost(formData),
+    mutationFn: (updatePostData) => updatePost(updatePostData),
     onSuccess: (data) => {
-      navigate(`/post/${data.data.savedPost.slug}`);
+      navigate(`/post/${data.slug}`);
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (error) => {

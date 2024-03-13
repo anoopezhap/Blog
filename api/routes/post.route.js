@@ -11,5 +11,10 @@ router.delete(
   verifyToken,
   postController.deletepost
 );
+router.put(
+  "/updatepost/:postId/:userId",
+  verifyToken,
+  postController.updatepost
+);
 
 module.exports = router;

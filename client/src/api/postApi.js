@@ -33,3 +33,18 @@ export async function deletePost(body) {
 
   return res;
 }
+
+export async function updatePost(updatePostData) {
+  const { _id: postId, userId, loggedInUserId } = updatePostData;
+
+  //console.log(postId, userId, loggedInUserId);
+
+  const res = await axios.put(
+    `/api/post/updatepost/${postId}/${loggedInUserId}`,
+    updatePostData,
+    {
+      withCredentials: true,
+    }
+  );
+  return res;
+}
