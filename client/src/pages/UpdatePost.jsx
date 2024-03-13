@@ -14,57 +14,39 @@ import "react-circular-progressbar/dist/styles.css";
 import {
   QueryClient,
   useMutation,
-  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { createPost, getPostById } from "../api/postApi";
-import { useNavigate, useParams } from "react-router-dom";
+import { createPost } from "../api/postApi";
+import { useNavigate } from "react-router-dom";
 
-function UpdatePost() {
+function CreatePost({ postData }) {
+  //console.log("data", postData);
+
   const [file, setFile] = useState(null);
   const [imageUploadProgess, setImageUploadProgess] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
-
-  const { postId } = useParams();
+  const [formData, setFormData] = useState(postData);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   function handleFormSubmit(e) {
     e.preventDefault();
-    mutate(formData);
+
+    console.log(formData);
+    //mutate(formData);
   }
 
-  const { isPending, isError, isSuccess, data } = useQuery({
-    queryKey: ["postbyid"],
-    queryFn: () => getPostById(postId),
+  const { mutate, isError, isPending, error } = useMutation({
+    mutationFn: (formData) => createPost(formData),
+    onSuccess: (data) => {
+      navigate(`/post/${data.data.savedPost.slug}`);
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
   });
-
-  if (isPending) {
-    return <p>Loading.....</p>;
-  }
-
-  if (!isPending) {
-    console.log(data[0]);
-    setFormData(data[0]);
-  }
-
-  //   const {
-  //     mutate: updateMutate,
-  //     isError: updateIsError,
-  //     isPending: updateIsPending,
-  //     error: updateError,
-  //   } = useMutation({
-  //     mutationFn: (formData) => createPost(formData),
-  //     onSuccess: (data) => {
-  //       navigate(`/post/${data.data.savedPost.slug}`);
-  //       queryClient.invalidateQueries({ queryKey: ["posts"] });
-  //     },
-  //     onError: (error) => {
-  //       console.log("error", error);
-  //     },
-  //   });
 
   async function handleUploadImage() {
     try {
@@ -108,7 +90,7 @@ function UpdatePost() {
 
   return (
     <div className="pt-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold">Create a Post</h1>
+      <h1 className="text-center text-3xl my-7 font-semibold">Update a Post</h1>
       <form className="flex flex-col gap-4" onSubmit={handleFormSubmit}>
         <div className="flex flex-xol gap-4 sm:flex-row justify-between">
           <TextInput
@@ -120,11 +102,13 @@ function UpdatePost() {
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
+            value={formData.title}
           />
           <Select
             onChange={(e) =>
               setFormData({ ...formData, category: e.target.value })
             }
+            value={formData.category}
           >
             <option value="uncategorized">Select a category</option>
             <option value="javascript">JavaScript</option>
@@ -172,13 +156,14 @@ function UpdatePost() {
           className="h-72 mb-12"
           required
           onChange={(value) => setFormData({ ...formData, content: value })}
+          value={formData.content}
         />
         <Button
           type="submit"
           gradientDuoTone="purpleToPink"
           disabled={imageUploadProgess}
         >
-          Publish
+          Update Post
         </Button>
         {isError && (
           <Alert color="failure" className="mt-5">
@@ -190,4 +175,4 @@ function UpdatePost() {
   );
 }
 
-export default UpdatePost;
+export default CreatePost;
