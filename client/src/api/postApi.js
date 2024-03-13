@@ -48,3 +48,8 @@ export async function updatePost(updatePostData) {
   );
   return res;
 }
+
+export async function getPostBySlug(slug) {
+  const res = await axios.get(`/api/post/getPosts?slug=${slug}`);
+  return res.data.posts;
+}
