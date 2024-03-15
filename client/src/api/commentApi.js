@@ -3,7 +3,7 @@ import useAxios from "../hooks/useAxios";
 const axios = useAxios();
 
 export async function createComment(body) {
-  console.log("insiede fn", body);
+  //console.log("insiede fn", body);
   const res = await axios.post("/api/comment/create", body, {
     withCredentials: true,
   });

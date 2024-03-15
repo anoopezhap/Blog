@@ -13,7 +13,7 @@ function PostPage() {
   const [postId, setPostId] = useState(null);
 
   const { isPending, isError, isSuccess, data, error } = useQuery({
-    queryKey: ["postbyslug"],
+    queryKey: ["postbyslug", postSlug],
     queryFn: () => getPostBySlug(postSlug),
   });
 
@@ -89,7 +89,7 @@ function PostPage() {
       ></div>
       <div className="max-w-4xl mx-auto w-full">
         <CallToAction />
-        <CommentSection commentsData={commentsData} />
+        <CommentSection commentsData={commentsData} postId={data[0]._id} />
       </div>
     </main>
   );

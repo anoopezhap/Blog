@@ -7,10 +7,10 @@ import { createComment, getPostCommentsById } from "../api/commentApi";
 import { get } from "mongoose";
 import Comment from "./Comment";
 
-function CommentSection({ commentsData }) {
+function CommentSection({ commentsData, postId }) {
   const commentList = commentsData.data;
 
-  console.log("commentList", commentList);
+  //console.log("postId", postId);
 
   const { currentUser } = useSelector((state) => state.user);
 
@@ -98,7 +98,7 @@ function CommentSection({ commentsData }) {
             </div>
           </div>
           {commentList.map((comment) => (
-            <Comment key={comment._id} />
+            <Comment key={comment._id} comment={comment} />
           ))}
         </>
       )}

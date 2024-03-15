@@ -45,11 +45,12 @@ function CreatePost({ postData }) {
     mutate(updatePostData);
   }
 
-  const { mutate, isError, isPending, error } = useMutation({
+  const { mutate, isError, isPending, error, data } = useMutation({
     mutationFn: (updatePostData) => updatePost(updatePostData),
     onSuccess: (data) => {
-      navigate(`/post/${data.slug}`);
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      //console.log(data.data.slug);
+      navigate(`/post/${data.data.slug}`);
     },
     onError: (error) => {
       console.log("error", error);

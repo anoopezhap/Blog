@@ -41,7 +41,7 @@ function DashPosts() {
 
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["posts"],
+      queryKey: ["posts", currentUser._id],
       queryFn: (props) => getAllPostsByUser(currentUser._id, props),
       initialPageParam: 0,
       getNextPageParam: (lastPage, allPages) => {

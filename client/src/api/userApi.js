@@ -60,3 +60,9 @@ export async function getUsers(props) {
 
   return res.data.users;
 }
+
+export async function getCommentUser(userId) {
+  const res = await axios.get(`api/user/${userId}`);
+
+  return res;
+}

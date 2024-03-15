@@ -8,7 +8,14 @@ import { store, persistor } from "./store.js";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+      gcTime: 0,
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

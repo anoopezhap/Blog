@@ -125,4 +125,17 @@ const getUsers = async (req, res, next) => {
   }
 };
 
-module.exports = { updateUser, deleteUser, signout, getUsers };
+const getCommentUsers = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return next(errorHandler(404, "user not found"));
+    }
+    const { password, ...rest } = user._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+module.exports = { updateUser, deleteUser, signout, getUsers, getCommentUsers };

@@ -6,11 +6,12 @@ import { useParams } from "react-router-dom";
 function EditPost() {
   const { postId } = useParams();
   const { isPending, isError, isSuccess, data } = useQuery({
-    queryKey: ["postbyid"],
+    queryKey: ["postbyid", postId],
     queryFn: () => getPostById(postId),
   });
 
   if (isPending) {
+    //console.log("ispending", data);
     return <p>Loading.....</p>;
   }
 
@@ -19,6 +20,7 @@ function EditPost() {
   }
 
   const postData = data[0];
+  //console.log("issucces", data[0]._id);
 
   return <UpdatePost postData={postData} />;
 }
