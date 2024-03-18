@@ -11,5 +11,10 @@ router.put(
   verifyToken,
   commentController.likeComment
 );
+router.put(
+  "/editComment/:commentId",
+  verifyToken,
+  commentController.editComment
+);
 
 module.exports = router;

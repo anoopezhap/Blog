@@ -27,3 +27,18 @@ export async function likeComment(commentId) {
   );
   return res;
 }
+
+export async function editComment(body) {
+  const { commentId, content } = body;
+
+  console.log("commentId", commentId);
+  console.log("content", content);
+
+  const res = await axios.put(
+    `/api/comment/editComment/${commentId}`,
+    { content: content },
+    { withCredentials: true }
+  );
+
+  return res;
+}
