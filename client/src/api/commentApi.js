@@ -31,14 +31,23 @@ export async function likeComment(commentId) {
 export async function editComment(body) {
   const { commentId, content } = body;
 
-  console.log("commentId", commentId);
-  console.log("content", content);
+  // console.log("commentId", commentId);
+  // console.log("content", content);
 
   const res = await axios.put(
     `/api/comment/editComment/${commentId}`,
     { content: content },
     { withCredentials: true }
   );
+
+  return res;
+}
+
+export async function deleteComment(commentId) {
+  //console.log(commentId);
+  const res = await axios.delete(`/api/comment/deleteComment/${commentId}`, {
+    withCredentials: true,
+  });
 
   return res;
 }

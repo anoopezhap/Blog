@@ -2,15 +2,17 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCommentUser } from "../api/userApi";
 import moment from "moment";
 import { FaThumbsUp } from "react-icons/fa";
-import { editComment, likeComment } from "../api/commentApi";
+import { deleteComment, editComment, likeComment } from "../api/commentApi";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Button, Textarea } from "flowbite-react";
+import { Button, Textarea, Modal } from "flowbite-react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 function Comment({ comment }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -50,6 +52,20 @@ function Comment({ comment }) {
     },
   });
 
+  const {
+    isPending: deleteIsPending,
+    isSuccess: deleteIsSuccess,
+    data: deleteData,
+    error: deleteError,
+    mutate: deleteMutate,
+  } = useMutation({
+    mutationFn: (commentId) => deleteComment(commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
+      setShowDeletePopup(false);
+    },
+  });
+
   if (isPending) {
     return <p>IsLoading</p>;
   }
@@ -69,6 +85,10 @@ function Comment({ comment }) {
   function handleEdit() {
     const body = { commentId, content: editedContent };
     editMutate(body);
+  }
+
+  function handleDelete() {
+    deleteMutate(commentId);
   }
 
   return (
@@ -147,9 +167,44 @@ function Comment({ comment }) {
                     Edit
                   </button>
                 )}
+              {currentUser &&
+                (currentUser._id === comment.userId || currentUser.isAdmin) && (
+                  <button
+                    type="button"
+                    className="text-gray-400 hover:text-red-500"
+                    onClick={() => setShowDeletePopup(true)}
+                  >
+                    Delete
+                  </button>
+                )}
             </div>
           </>
         )}
+
+        <Modal
+          show={showDeletePopup}
+          onClose={() => setShowDeletePopup(false)}
+          popup
+          size="md"
+        >
+          <Modal.Header />
+          <Modal.Body>
+            <div className="text-center">
+              <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+              <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+                Are you sure you want to delete this post?
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button color="failure" onClick={handleDelete}>
+                  Yes, I'm sure
+                </Button>
+                <Button color="gray" onClick={() => setShowDeletePopup(false)}>
+                  No, cancel
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
       </div>
     </div>
   );

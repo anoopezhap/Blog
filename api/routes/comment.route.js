@@ -17,4 +17,10 @@ router.put(
   commentController.editComment
 );
 
+router.delete(
+  "/deleteComment/:commentId",
+  verifyToken,
+  commentController.deleteComment
+);
+
 module.exports = router;
