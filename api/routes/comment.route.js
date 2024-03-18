@@ -23,4 +23,6 @@ router.delete(
   commentController.deleteComment
 );
 
+router.get("/getComments", verifyToken, commentController.getComments);
+
 module.exports = router;

@@ -53,3 +53,10 @@ export async function getPostBySlug(slug) {
   const res = await axios.get(`/api/post/getPosts?slug=${slug}`);
   return res.data.posts;
 }
+
+export async function getRecentPosts(order, limit) {
+  const res = await axios.get(
+    `/api/post/getPosts?order=${order}&limit=${limit}`
+  );
+  return res.data.posts;
+}

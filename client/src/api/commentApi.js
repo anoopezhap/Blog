@@ -51,3 +51,14 @@ export async function deleteComment(commentId) {
 
   return res;
 }
+
+export async function getAllComments(props) {
+  const res = await axios.get(
+    `/api/comment/getComments?startIndex=${props.pageParam}`,
+    {
+      withCredentials: true,
+    }
+  );
+
+  return res.data.comments;
+}

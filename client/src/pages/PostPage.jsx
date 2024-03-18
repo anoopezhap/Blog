@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import { getPostBySlug } from "../api/postApi";
+import { getPostBySlug, getRecentPosts } from "../api/postApi";
 import { Button, Spinner } from "flowbite-react";
 import CallToAction from "../components/CallToAction";
 import CommentSection from "../components/CommentSection";
 import { getPostCommentsById } from "../api/commentApi";
 import { useState } from "react";
+import PostCard from "../components/PostCard";
 
 function PostPage() {
   const { postSlug } = useParams();
@@ -17,19 +18,14 @@ function PostPage() {
     queryFn: () => getPostBySlug(postSlug),
   });
 
-  // let post;
-  // if (isSuccess) {
-  //   post = data[0];
-  // }
-
-  // if (isSuccess) {
-  //   console.log("posts", data[0]);
-  //   console.log("postId", data[0]._id);
-  // }
-
-  // if (isPending) {
-  //   return <p>Is loading...</p>;
-  // }
+  const {
+    isPending: recentPostsIsPending,
+    isSuccess: recentPostsIsSuccess,
+    data: recentPostsData,
+  } = useQuery({
+    queryKey: ["recentposts"],
+    queryFn: () => getRecentPosts("desc", 3),
+  });
 
   const {
     isPending: commentIsPending,
@@ -42,6 +38,10 @@ function PostPage() {
     enabled: !!data?.[0]._id,
   });
 
+  // if (recentPostsIsSuccess) {
+  //   console.log(recentPostsData);
+  // }
+
   if (isPending || commentIsPending) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -52,11 +52,6 @@ function PostPage() {
 
   if (isError || commentIsError) {
     return <p>Something happend</p>;
-  }
-
-  if (isSuccess && commentIsSuccess) {
-    // console.log("posts", data?.[0]);
-    // console.log("comment", commentsData.data);
   }
 
   return (
@@ -90,6 +85,16 @@ function PostPage() {
       <div className="max-w-4xl mx-auto w-full">
         <CallToAction />
         <CommentSection commentsData={commentsData} postId={data[0]._id} />
+      </div>
+      <div className="flex flex-col justify-center items-center mb-5">
+        <h1 className="text-xl mt-5">Recent Articles</h1>
+        <div className="flex flex-wrap gap-5 justify-center">
+          {recentPostsIsPending && <p>Is Loading</p>}
+          {recentPostsIsSuccess &&
+            recentPostsData.map((post) => (
+              <PostCard key={post._id} post={post} />
+            ))}
+        </div>
       </div>
     </main>
   );

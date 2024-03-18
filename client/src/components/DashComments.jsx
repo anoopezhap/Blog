@@ -8,20 +8,20 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useQueryClient } from "@tanstack/react-query";
 import { deleteUser, getUsers } from "../api/userApi";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import { deleteComment, getAllComments } from "../api/commentApi";
 
-function DashUsers() {
+function DashComments() {
   const { currentUser } = useSelector((state) => state.user);
 
   //const [showMore, setShowMore] = useState(true);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [commentIdToDelete, setCommentIdToDelete] = useState(null);
 
   const queryClient = useQueryClient();
 
-  function handleDeleteUser() {
-    //const body = { userId: userIdToDelete };
-
-    deleteMutate(userIdToDelete);
+  function handleDeleteComment() {
+    //const body = { userId: commentIdToDelete };
+    deleteMutate(commentIdToDelete);
   }
 
   const {
@@ -32,9 +32,9 @@ function DashUsers() {
     error: deleteError,
     mutate: deleteMutate,
   } = useMutation({
-    mutationFn: (userIdToDelete) => deleteUser(userIdToDelete),
+    mutationFn: (commentIdToDelete) => deleteComment(commentIdToDelete),
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
       setShowDeletePopup(false);
     },
     onError: (error) => {
@@ -44,8 +44,8 @@ function DashUsers() {
 
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["users"],
-      queryFn: (props) => getUsers(props),
+      queryKey: ["comments"],
+      queryFn: (props) => getAllComments(props),
       initialPageParam: 0,
       getNextPageParam: (lastPage, allPages) => {
         let count = 0;
@@ -57,9 +57,9 @@ function DashUsers() {
       },
     });
 
-  if (status === "success") {
-    console.log(data);
-  }
+  //   if (status === "success") {
+  //     console.log(data);
+  //   }
 
   if (status === "pending") {
     return <p>Loaindg...</p>;
@@ -71,41 +71,30 @@ function DashUsers() {
         <>
           <Table hoverable className="shadow:md">
             <Table.Head>
-              <Table.HeadCell>Date Created</Table.HeadCell>
-              <Table.HeadCell>User Image</Table.HeadCell>
-              <Table.HeadCell>Username</Table.HeadCell>
-              <Table.HeadCell>Email</Table.HeadCell>
-              <Table.HeadCell>Admin</Table.HeadCell>
+              <Table.HeadCell>Date Updated</Table.HeadCell>
+              <Table.HeadCell>Comment Content</Table.HeadCell>
+              <Table.HeadCell>Number of likes</Table.HeadCell>
+              <Table.HeadCell>Post ID</Table.HeadCell>
+              <Table.HeadCell>user ID</Table.HeadCell>
               <Table.HeadCell>Delete</Table.HeadCell>
             </Table.Head>
             {data?.pages?.map((page) =>
-              page.map((user) => (
-                <Table.Body className="divide-y" key={user._id}>
+              page.map((comment) => (
+                <Table.Body className="divide-y" key={comment._id}>
                   <Table.Row>
                     <Table.Cell>
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {new Date(comment.updatedAt).toLocaleDateString()}
                     </Table.Cell>
-                    <Table.Cell>
-                      <img
-                        src={user.profilePicture}
-                        alt={user.username}
-                        className="w-11 h-11 object-cover bg-gray-500 rounded-full"
-                      />
-                    </Table.Cell>
-                    <Table.Cell>{user.username}</Table.Cell>
-                    <Table.Cell>{user.email}</Table.Cell>
-                    <Table.Cell>
-                      {user.isAdmin ? (
-                        <FaCheck className="text-green-500" />
-                      ) : (
-                        <FaTimes className="text-red-500" />
-                      )}
-                    </Table.Cell>
+
+                    <Table.Cell>{comment.content}</Table.Cell>
+                    <Table.Cell>{comment.numberOfLikes}</Table.Cell>
+                    <Table.Cell>{comment.postId}</Table.Cell>
+                    <Table.Cell>{comment.userId}</Table.Cell>
                     <Table.Cell>
                       <span
                         onClick={() => {
                           setShowDeletePopup(true);
-                          setUserIdToDelete(user._id);
+                          setCommentIdToDelete(comment._id);
                         }}
                         className="font-medium text-red-500 hover:underline cursor-pointer"
                       >
@@ -146,12 +135,12 @@ function DashUsers() {
           <div className="text-center">
             <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
             <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this user?
+              Are you sure you want to delete this Comment?
             </h3>
             <div className="flex justify-center gap-4">
               <Button
                 color="failure"
-                onClick={handleDeleteUser}
+                onClick={handleDeleteComment}
                 disabled={deleteIsPending}
               >
                 Yes, I'm sure
@@ -167,4 +156,4 @@ function DashUsers() {
   );
 }
 
-export default DashUsers;
+export default DashComments;
