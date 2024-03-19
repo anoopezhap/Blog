@@ -60,3 +60,12 @@ export async function getRecentPosts(order, limit) {
   );
   return res.data.posts;
 }
+
+export async function getPostsBySearch(searchTerm, sort, category) {
+  console.log("inside get posts by search");
+  const res = await axios.get(
+    `/api/post/getPosts?searchTerm=${searchTerm}&sort=${sort}&category=${category}`
+  );
+
+  return res;
+}

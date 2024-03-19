@@ -57,9 +57,9 @@ function DashUsers() {
       },
     });
 
-  if (status === "success") {
-    console.log(data);
-  }
+  // if (status === "success") {
+  //   console.log(data);
+  // }
 
   if (status === "pending") {
     return <p>Loaindg...</p>;

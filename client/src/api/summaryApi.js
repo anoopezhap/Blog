@@ -3,8 +3,6 @@ import useAxios from "../hooks/useAxios";
 const axios = useAxios();
 
 export async function getSummary(currentUserId) {
-  console.log("inside get summary");
-
   const users = await axios.get("/api/user/getusers?limit=5", {
     withCredentials: true,
   });
