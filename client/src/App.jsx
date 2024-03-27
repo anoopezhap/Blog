@@ -14,7 +14,7 @@ import UpdatePost from "./pages/UpdatePost";
 import EditPost from "./pages/EditPost";
 import PostPage from "./pages/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
-import Search from "./components/Search";
+import Search from "./pages/Search";
 
 export default function App() {
   return (

@@ -13,9 +13,9 @@ import { deleteUserDetails } from "../redux/userSlice";
 import { useEffect, useState } from "react";
 
 function Header() {
-  const [searchTerm, setSearchTerm] = useState("");
+  // const [searchTerm, setSearchTerm] = useState("");
+  // const location = useLocation();
 
-  //const location = useLocation();
   //console.log(searchTerm);
 
   const navigate = useNavigate();
@@ -27,13 +27,13 @@ function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get("searchTerm");
-    if (searchTermFromUrl) {
-      setSearchTerm(searchTermFromUrl);
-    }
-  }, [location.search]);
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(location.search);
+  //   const searchTermFromUrl = urlParams.get("searchTerm");
+  //   if (searchTermFromUrl) {
+  //     setSearchTerm(searchTermFromUrl);
+  //   }
+  // }, [location.search]);
 
   const {
     mutate: signoutMutate,
@@ -56,10 +56,14 @@ function Header() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const urlParams = new URLSearchParams(location.search);
-    urlParams.set("searchTerm", searchTerm);
-    const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
+    // const urlParams = new URLSearchParams(location.search);
+    // urlParams.set("searchTerm", searchTerm);
+    // const searchQuery = urlParams.toString();
+    //searchParams.set("searchterm", e.target.value);
+    const searchterm = searchParams.get("searchterm");
+    console.log(searchterm);
+    //setSearchParams(searchParams);
+    navigate(`/search?searchterm=${searchterm}`);
   };
 
   const path = useLocation().pathname;
@@ -80,8 +84,8 @@ function Header() {
           placeholder="Search..."
           rightIcon={AiOutlineSearch}
           className="hidden lg:inline"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          //value={searchTerm}
+          onChange={(e) => searchParams.set("searchterm", e.target.value)}
         />
       </form>
       <Button className="lg:hidden w-12 h-10" color="gray" pill>
