@@ -22,6 +22,8 @@ function Header() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const currentParams = Object.fromEntries([...searchParams]);
+
   //const searchTerm = searchParams.get("searchTerm");
 
   const { currentUser } = useSelector((state) => state.user);
@@ -61,7 +63,7 @@ function Header() {
     // const searchQuery = urlParams.toString();
     //searchParams.set("searchterm", e.target.value);
     const searchterm = searchParams.get("searchterm");
-    console.log(searchterm);
+    //console.log(searchterm);
     //setSearchParams(searchParams);
     navigate(`/search?searchterm=${searchterm}`);
   };
@@ -84,7 +86,7 @@ function Header() {
           placeholder="Search..."
           rightIcon={AiOutlineSearch}
           className="hidden lg:inline"
-          //value={searchTerm}
+          //value={currentParams.searchterm}
           onChange={(e) => searchParams.set("searchterm", e.target.value)}
         />
       </form>

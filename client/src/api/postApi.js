@@ -61,11 +61,14 @@ export async function getRecentPosts(order, limit) {
   return res.data.posts;
 }
 
-export async function getPostsBySearch(searchTerm, sort, category) {
+export async function getPostsBySearch(searchTerm, sort, category, props) {
+  sort === undefined ? (sort = "asc") : "";
+  category === undefined ? (category = "uncategorized") : "";
   console.log("inside get posts by search");
+  console.log(sort);
   const res = await axios.get(
-    `/api/post/getPosts?searchTerm=${searchTerm}&sort=${sort}&category=${category}`
+    `/api/post/getPosts?searchTerm=${searchTerm}&order=${sort}&category=${category}&startIndex=${props.pageParam}`
   );
 
-  return res;
+  return res.data.posts;
 }
