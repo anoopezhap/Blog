@@ -22,11 +22,11 @@ export default function FooterComp() {
               <Footer.Title title="About" />
               <Footer.LinkGroup col>
                 <Footer.Link
-                  href="https://www.100jsprojects.com"
+                  href="https://yourrepairs.onrender.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  100 JS Projects
+                  Repair Store
                 </Footer.Link>
                 <Footer.Link
                   href="/about"
@@ -38,29 +38,29 @@ export default function FooterComp() {
               </Footer.LinkGroup>
             </div>
             <div>
-              <Footer.Title title="Follow Us" />
+              <Footer.Title title="Follow Me" />
               <Footer.LinkGroup col>
                 <Footer.Link
-                  href="https://www.100jsprojects.com"
+                  href="https://www.linkedin.com/in/anoop-joseph/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Github
+                  LinkedIn
                 </Footer.Link>
                 <Footer.Link
-                  href="/about"
+                  href="https://github.com/anoopezhap"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Discourd
+                  GitHub
                 </Footer.Link>
               </Footer.LinkGroup>
             </div>
             <div>
               <Footer.Title title="Legal" />
               <Footer.LinkGroup col>
-                <Footer.Link href="#">privasy Policy</Footer.Link>
-                <Footer.Link href="#">terms & Conditions</Footer.Link>
+                <Footer.Link href="#">Privacy Policy</Footer.Link>
+                <Footer.Link href="#">Terms and Conditions</Footer.Link>
               </Footer.LinkGroup>
             </div>
           </div>
