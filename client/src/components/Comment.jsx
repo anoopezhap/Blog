@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Button, Textarea, Modal } from "flowbite-react";
+import { Button, Textarea, Modal, Spinner } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 function Comment({ comment }) {
@@ -67,7 +67,7 @@ function Comment({ comment }) {
   });
 
   if (isPending) {
-    return <p>IsLoading</p>;
+    return <Spinner />;
   }
 
   if (isError) {

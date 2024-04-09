@@ -12,40 +12,25 @@ import { getPostsBySearch } from "../api/postApi";
 import PostCard from "../components/PostCard";
 
 function Search() {
-  // const [sidebarData, setSidebarData] = useState({
-  //   searchTerm: "",
-  //   sort: "desc",
-  //   category: "uncategorized",
-  // });
-
   const [searchParams, setSearchParams] = useSearchParams();
   const currentParams = Object.fromEntries([...searchParams]);
-  //console.log(currentParams);
 
-  //const location = useLocation();
+  //console.log("current params", currentParams);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     searchParams.set("sort", "desc");
-    searchParams.set("category", "uncategorized");
+    searchParams.set("category", "all");
     setSearchParams(searchParams);
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(currentParams);
-  };
+  //console.log("first load", currentParams);
 
-  // const { data, isLoading, isSuccess, isError } = useQuery({
-  //   queryKey: ["serach", currentParams],
-  //   queryFn: () =>
-  //     getPostsBySearch(
-  //       currentParams.searchterm,
-  //       currentParams.sort,
-  //       currentParams.category
-  //     ),
-  // });
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("after changing", currentParams);
+  // };
 
   const {
     data,
@@ -55,15 +40,12 @@ function Search() {
     hasNextPage,
     isLoading,
     isSuccess,
+    isError,
+    error,
   } = useInfiniteQuery({
-    queryKey: ["serach", currentParams],
+    queryKey: ["search", currentParams],
     queryFn: (props) =>
-      getPostsBySearch(
-        currentParams.searchterm,
-        currentParams.sort,
-        currentParams.category,
-        props
-      ),
+      getPostsBySearch(currentParams.sort, currentParams.category, props),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       let count = 0;
@@ -79,23 +61,18 @@ function Search() {
     console.log(data);
   }
 
+  if (isError) {
+    console.log("error", error);
+  }
+
+  if (isLoading) {
+    console.log("isloading");
+  }
+
   return (
     <div className="flex flex-col md:flex-row">
       <div className="p-7 border-b md:border-r md:min-h-screen border-gray-500">
-        <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-          {/* <div className="flex   items-center gap-2">
-            <label className="whitespace-nowrap font-semibold">
-              Search Term:
-            </label>
-            <TextInput
-              placeholder="Search..."
-              id="searchTerm"
-              type="text"
-              //value={sidebarData.searchTerm}
-              value={currentParams.searchterm}
-              onChange={handleChange}
-            />
-          </div> */}
+        <form className="flex flex-col gap-8">
           <div className="flex items-center gap-2">
             <label className="font-semibold">Sort:</label>
             <Select
@@ -124,9 +101,10 @@ function Search() {
               id="category"
             >
               <option value="uncategorized">Uncategorized</option>
-              <option value="reactjs">React.js</option>
-              <option value="nextjs">Next.js</option>
+              <option value="react">React.js</option>
+              <option value="node">Node.js</option>
               <option value="javascript">JavaScript</option>
+              <option value="all">All</option>
             </Select>
           </div>
           {/* <Button type="submit" outline gradientDuoTone="purpleToPink">

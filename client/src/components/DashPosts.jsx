@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useQueryClient } from "@tanstack/react-query";
+import { Spinner } from "flowbite-react";
 
 function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
@@ -55,7 +56,7 @@ function DashPosts() {
     });
 
   if (status === "pending") {
-    return <p>Loaindg...</p>;
+    return <Spinner />;
   }
 
   // console.log(data);

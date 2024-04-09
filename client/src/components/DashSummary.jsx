@@ -7,7 +7,7 @@ import {
   HiDocumentText,
   HiOutlineUserGroup,
 } from "react-icons/hi";
-import { Button, Table } from "flowbite-react";
+import { Button, Spinner, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 
 function DashSummary() {
@@ -44,7 +44,8 @@ function DashSummary() {
   }
 
   if (isPending) {
-    return <p>Isloading</p>;
+    //return <p>Isloading</p>;
+    return <Spinner />;
   }
 
   return (

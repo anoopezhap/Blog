@@ -1,3 +1,4 @@
+import { createHashRouter } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 
 const axios = useAxios();
@@ -61,14 +62,24 @@ export async function getRecentPosts(order, limit) {
   return res.data.posts;
 }
 
-export async function getPostsBySearch(searchTerm, sort, category, props) {
-  sort === undefined ? (sort = "asc") : "";
-  category === undefined ? (category = "uncategorized") : "";
-  console.log("inside get posts by search");
-  console.log(sort);
-  const res = await axios.get(
-    `/api/post/getPosts?searchTerm=${searchTerm}&order=${sort}&category=${category}&startIndex=${props.pageParam}`
-  );
+export async function getPostsBySearch(sort, category, props) {
+  console.log("beforesort", sort, "beforecategory", category);
 
-  return res.data.posts;
+  // sort === undefined ? (sort = "asc") : "";
+  // category === undefined ? (category = "all") : "";
+
+  //onsole.log("sort", sort, "category", category);
+
+  if (category === "all") {
+    const res = await axios.get(
+      `/api/post/getPosts?order=${sort}&startIndex=${props.pageParam}`
+    );
+
+    return res.data.posts;
+  } else {
+    const res = await axios.get(
+      `/api/post/getPosts?order=${sort}&category=${category}&startIndex=${props.pageParam}`
+    );
+    return res.data.posts;
+  }
 }

@@ -8,6 +8,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useQueryClient } from "@tanstack/react-query";
 import { deleteUser, getUsers } from "../api/userApi";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import { Spinner } from "flowbite-react";
 
 function DashUsers() {
   const { currentUser } = useSelector((state) => state.user);
@@ -62,7 +63,7 @@ function DashUsers() {
   // }
 
   if (status === "pending") {
-    return <p>Loaindg...</p>;
+    return <Spinner />;
   }
 
   return (

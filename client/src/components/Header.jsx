@@ -80,7 +80,7 @@ function Header() {
         </span>
         Blog
       </Link>
-      <form onSubmit={handleSubmit}>
+      {/* <form onSubmit={handleSubmit}>
         <TextInput
           type="text"
           placeholder="Search..."
@@ -89,7 +89,7 @@ function Header() {
           //value={currentParams.searchterm}
           onChange={(e) => searchParams.set("searchterm", e.target.value)}
         />
-      </form>
+      </form> */}
       <Button className="lg:hidden w-12 h-10" color="gray" pill>
         <AiOutlineSearch />
       </Button>

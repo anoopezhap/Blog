@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import UpdatePost from "./UpdatePost";
 import { getPostById } from "../api/postApi";
 import { useParams } from "react-router-dom";
+import { Spinner } from "flowbite-react";
 
 function EditPost() {
   const { postId } = useParams();
@@ -12,7 +13,7 @@ function EditPost() {
 
   if (isPending) {
     //console.log("ispending", data);
-    return <p>Loading.....</p>;
+    return <Spinner />;
   }
 
   if (isError) {

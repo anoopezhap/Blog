@@ -9,6 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { deleteUser, getUsers } from "../api/userApi";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import { deleteComment, getAllComments } from "../api/commentApi";
+import { Spinner } from "flowbite-react";
 
 function DashComments() {
   const { currentUser } = useSelector((state) => state.user);
@@ -62,7 +63,7 @@ function DashComments() {
   //   }
 
   if (status === "pending") {
-    return <p>Loaindg...</p>;
+    return <Spinner />;
   }
 
   return (

@@ -23,10 +23,10 @@ function Home() {
       <div className="flex flex-col gap-6 lg:p-28 p-3 max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold lg:text-6xl">Welcome to my Blog</h1>
         <p className="text-gray-500 text-xs sm:text-sm">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sed
-          voluptates numquam impedit corporis eaque cum eos, quis eveniet culpa
-          magni eius labore repellendus aut, atque ipsa repudiandae iure velit
-          neque.
+          Step into a world where technology meets creativity, where ideas flow
+          freely, and where learning never stops. Join me on this exhilarating
+          journey through the realms of MongoDB, Express.js, React.js, and
+          Node.js as we explore the boundless possibilities of the MERN stack.
         </p>
         <Link
           to="/search"
