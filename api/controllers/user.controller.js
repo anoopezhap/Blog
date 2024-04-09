@@ -60,7 +60,7 @@ const deleteUser = async (req, res, next) => {
     );
   }
 
-  console.log("userid", req.params);
+  //console.log("userid", req.params);
 
   try {
     await User.findByIdAndDelete(req.params.userId);

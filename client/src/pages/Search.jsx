@@ -57,17 +57,17 @@ function Search() {
     },
   });
 
-  if (isSuccess) {
-    console.log(data);
-  }
+  // if (isSuccess) {
+  //   console.log(data);
+  // }
 
-  if (isError) {
-    console.log("error", error);
-  }
+  // if (isError) {
+  //   console.log("error", error);
+  // }
 
-  if (isLoading) {
-    console.log("isloading");
-  }
+  // if (isLoading) {
+  //   console.log("isloading");
+  // }
 
   return (
     <div className="flex flex-col md:flex-row">
