@@ -63,7 +63,7 @@ export async function getRecentPosts(order, limit) {
 }
 
 export async function getPostsBySearch(sort, category, props) {
-  console.log("beforesort", sort, "beforecategory", category);
+  //console.log("beforesort", sort, "beforecategory", category);
 
   // sort === undefined ? (sort = "asc") : "";
   // category === undefined ? (category = "all") : "";
